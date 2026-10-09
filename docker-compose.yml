@@ -1,0 +1,35 @@
+# 外呼系统全栈编排（交付物，本机无 docker 未验证）。
+# 后端默认 sqlite；要用 Postgres 时把 WAHU_STORAGE 改成 postgres 并保留下面的 db 服务。
+services:
+  api:
+    build: .
+    ports:
+      - "9300:9300"
+    environment:
+      WAHU_ENV: dev
+      WAHU_STORAGE: sqlite
+      WAHU_SQLITE_PATH: /srv/wahu/var/wahu.sqlite3
+      WAHU_CRM_MODE: ${WAHU_CRM_MODE:-fake}
+      WAHU_CRM_BASE_URL: ${WAHU_CRM_BASE_URL:-http://host.docker.internal:9100/api/v1}
+      WAHU_CRM_API_TOKEN: ${WAHU_CRM_API_TOKEN:-dev-service-token}
+      WAHU_SERVE_WEB: "true"
+      WAHU_CORS_ORIGINS: http://localhost:5176,http://127.0.0.1:5176
+    volumes:
+      - wahu-data:/srv/wahu/var
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # 可选：把存储换成 Postgres 时启用
+  # db:
+  #   image: postgres:16
+  #   environment:
+  #     POSTGRES_USER: wahu
+  #     POSTGRES_PASSWORD: wahu
+  #     POSTGRES_DB: wahu
+  #   ports:
+  #     - "5434:5432"
+  #   volumes:
+  #     - wahu-pg:/var/lib/postgresql/data
+
+volumes:
+  wahu-data:

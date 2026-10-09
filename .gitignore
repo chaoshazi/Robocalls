@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+var/
+*.sqlite3
+data/*.sqlite3
+data/*.sqlite3-*
+web/node_modules/
+web/dist/
+.vite/
+
+# Codex 会话记录（含对话原文，不进版本库）
+codex-session-*.md
